@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/db';
 import Post from '@/models/Post';
+import connectDB from '@/lib/mongodb';
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase();
+    await connectDB();
     const post = await Post.findById(params.id);
     
     if (!post) {
@@ -27,7 +27,7 @@ export async function PUT(
 ) {
   try {
     const body = await request.json();
-    await connectToDatabase();
+    await connectDB();
     
     const post = await Post.findByIdAndUpdate(params.id, body, {
       new: true,
@@ -50,7 +50,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase();
+    await connectDB();
     const post = await Post.findByIdAndDelete(params.id);
     
     if (!post) {

@@ -5,6 +5,7 @@ export interface Service {
   title: string;
   description: string;
   color: string;
+  available?: boolean;
 }
 
 export interface Project {

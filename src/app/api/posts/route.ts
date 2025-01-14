@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/db';
+
 import Post from '@/models/Post';
+import connectDB from '@/lib/mongodb';
 
 export async function GET() {
   try {
-    await connectToDatabase();
+    await connectDB();
     const posts = await Post.find().sort({ createdAt: -1 });
     return NextResponse.json(posts);
   } catch (error) {
@@ -16,7 +17,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    await connectToDatabase();
+    await connectDB();
     
     const post = new Post(body);
     await post.save();

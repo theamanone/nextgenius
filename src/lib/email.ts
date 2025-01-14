@@ -1,3 +1,4 @@
+import { siteConfig } from '@/config/site.config';
 import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
@@ -8,7 +9,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-const WEBSITE_URL = 'https://webgeniuscraft.com';
+const WEBSITE_URL = `${siteConfig.url}`;
 
 const userEmailTemplate = (name: string) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">

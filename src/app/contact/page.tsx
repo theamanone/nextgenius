@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { FaPaperPlane, FaSpinner } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import ContactBackground from '@/components/ContactBackground';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -20,9 +21,9 @@ const fadeIn = {
 
 export default function Contact() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
+    name: 'aman',
+    email: 'amankirmara143@gmail.com',
+    message: 'hello world ',
   });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -73,8 +74,9 @@ export default function Contact() {
   };
 
   return (
-    <main className="min-h-screen pt-24 pb-16 px-4">
-      <div className="max-w-4xl mx-auto">
+    <main className="min-h-screen pt-24 pb-16 px-4 relative overflow-hidden">
+      <ContactBackground />
+      <div className="max-w-4xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -83,10 +85,10 @@ export default function Contact() {
           className="text-center mb-12"
         >
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent mb-4">
-            Get in Touch
+            Let's Build Something Amazing Together
           </h1>
-          <p className="text-gray-400 text-lg">
-            Have a question or want to work together? Drop me a message!
+          <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+            Ready to transform your digital vision into reality? Our team of experts is here to help you create exceptional web experiences.
           </p>
         </motion.div>
 
@@ -95,7 +97,7 @@ export default function Contact() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-gray-900/50 backdrop-blur-lg rounded-2xl p-8 shadow-xl"
+          className="bg-gray-900/50 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-gray-800/50"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

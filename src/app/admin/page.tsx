@@ -1,147 +1,242 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { FiBox, FiFolder, FiShoppingCart, FiPlus, FiTrendingUp, FiTrendingDown } from 'react-icons/fi';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FaPlus } from 'react-icons/fa';
-import { BlogPost, MOCK_BLOG_POSTS } from '@/lib/data';
-import BlogPostCard from './components/BlogPostCard';
-import BlogPostForm from './components/BlogPostForm';
+import { toast } from 'react-hot-toast';
+
+interface Stats {
+  totalProducts: number;
+  totalProjects: number;
+  totalPurchases: number;
+  recentProducts: any[];
+  recentProjects: any[];
+  trends: {
+    products: number;
+    projects: number;
+    purchases: number;
+  };
+}
+
+const initialStats: Stats = {
+  totalProducts: 0,
+  totalProjects: 0,
+  totalPurchases: 0,
+  recentProducts: [],
+  recentProjects: [],
+  trends: {
+    products: 0,
+    projects: 0,
+    purchases: 0,
+  },
+};
 
 export default function AdminDashboard() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [stats, setStats] = useState<Stats>(initialStats);
   const [loading, setLoading] = useState(true);
-  const [showNewPostForm, setShowNewPostForm] = useState(false);
-  const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/admin/login');
-    } else if (status === 'authenticated') {
-      fetchPosts();
-    }
-  }, [status, router]);
+    fetchStats();
+  }, []);
 
-  const fetchPosts = async () => {
-    // This would typically be an API call
-    setPosts(MOCK_BLOG_POSTS);
-    setLoading(false);
-  };
-
-  const handleCreatePost = async (postData: Partial<BlogPost>) => {
+  const fetchStats = async () => {
     try {
-      // This would typically be an API call
-      const newPost = {
-        ...postData,
-        id: posts.length + 1,
-        createdAt: new Date().toISOString(),
-      } as BlogPost;
-      
-      setPosts(prev => [newPost, ...prev]);
-      setShowNewPostForm(false);
+      const response = await fetch('/api/admin/stats');
+      const data = await response.json();
+      if (data.success) {
+        setStats({
+          totalProducts: data.totalProducts || 0,
+          totalProjects: data.totalProjects || 0,
+          totalPurchases: data.totalPurchases || 0,
+          recentProducts: data.recentProducts || [],
+          recentProjects: data.recentProjects || [],
+          trends: {
+            products: data.trends?.products || 0,
+            projects: data.trends?.projects || 0,
+            purchases: data.trends?.purchases || 0,
+          },
+        });
+      } else {
+        throw new Error(data.error || 'Failed to fetch stats');
+      }
     } catch (error) {
-      console.error('Error creating post:', error);
+      console.error('Failed to fetch stats:', error);
+      toast.error('Failed to load dashboard data');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleUpdatePost = async (postData: Partial<BlogPost>) => {
-    if (!editingPost) return;
-    
-    try {
-      // This would typically be an API call
-      const updatedPost = {
-        ...editingPost,
-        ...postData,
-        updatedAt: new Date().toISOString(),
-      };
-      
-      setPosts(prev => prev.map(post => 
-        post.id === editingPost.id ? updatedPost : post
-      ));
-      setEditingPost(null);
-    } catch (error) {
-      console.error('Error updating post:', error);
-    }
-  };
+  if (loading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
-  const handleDeletePost = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this post?')) return;
-    
-    try {
-      // This would typically be an API call
-      setPosts(prev => prev.filter(post => post.id !== id));
-    } catch (error) {
-      console.error('Error deleting post:', error);
-    }
-  };
-
-  const handlePreviewPost = (id: number) => {
-    // Navigate to blog post preview
-    router.push(`/blog/${id}`);
-  };
+  const statCards = [
+    {
+      title: 'Total Products',
+      value: stats.totalProducts,
+      icon: FiBox,
+      trend: stats.trends.products,
+      href: '/admin/products',
+      color: 'bg-blue-500',
+    },
+    {
+      title: 'Total Projects',
+      value: stats.totalProjects,
+      icon: FiFolder,
+      trend: stats.trends.projects,
+      href: '/admin/projects',
+      color: 'bg-purple-500',
+    },
+    {
+      title: 'Total Purchases',
+      value: stats.totalPurchases,
+      icon: FiShoppingCart,
+      trend: stats.trends.purchases,
+      href: '/admin/purchases',
+      color: 'bg-green-500',
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 py-16 px-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <motion.h1
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="text-3xl font-bold text-white"
-          >
-            Blog Management
-          </motion.h1>
-          <motion.button
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            onClick={() => setShowNewPostForm(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all"
-          >
-            <FaPlus /> New Post
-          </motion.button>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-6"
+    >
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {statCards.map((stat, index) => {
+          const Icon = stat.icon;
+          return (
+            <motion.div
+              key={stat.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-white rounded-xl shadow-sm overflow-hidden"
+            >
+              <Link href={stat.href} className="block p-6 hover:bg-gray-50 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className={`p-3 rounded-lg ${stat.color} bg-opacity-10`}>
+                      <Icon className={`w-6 h-6 ${stat.color.replace('bg-', 'text-')}`} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">{stat.title}</p>
+                      <p className="text-2xl font-semibold mt-1">{stat.value}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    {stat.trend > 0 ? (
+                      <FiTrendingUp className="w-4 h-4 text-green-500" />
+                    ) : (
+                      <FiTrendingDown className="w-4 h-4 text-red-500" />
+                    )}
+                    <span className={`text-sm ${
+                      stat.trend > 0 ? 'text-green-500' : 'text-red-500'
+                    }`}>
+                      {Math.abs(stat.trend)}%
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Recent Items */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Products */}
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Recent Products</h2>
+              <Link
+                href="/admin/products/new"
+                className="flex items-center text-sm text-primary hover:text-primary-dark"
+              >
+                <FiPlus className="w-4 h-4 mr-1" />
+                Add Product
+              </Link>
+            </div>
+            <div className="divide-y divide-gray-200">
+              {stats.recentProducts.length > 0 ? (
+                stats.recentProducts.map((product) => (
+                  <div key={product.id} className="py-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{product.name}</p>
+                        <p className="text-sm text-gray-500">${product.price}</p>
+                      </div>
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        product.status === 'active'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {product.status}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="py-3 text-center text-gray-500">
+                  No products found
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
-        {/* Post Form */}
-        {(showNewPostForm || editingPost) && (
-          <div className="mb-8">
-            <BlogPostForm
-              onSubmit={editingPost ? handleUpdatePost : handleCreatePost}
-              initialData={editingPost || undefined}
-              onCancel={() => {
-                setShowNewPostForm(false);
-                setEditingPost(null);
-              }}
-            />
+        {/* Recent Projects */}
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Recent Projects</h2>
+              <Link
+                href="/admin/projects/new"
+                className="flex items-center text-sm text-primary hover:text-primary-dark"
+              >
+                <FiPlus className="w-4 h-4 mr-1" />
+                Add Project
+              </Link>
+            </div>
+            <div className="divide-y divide-gray-200">
+              {stats.recentProjects.length > 0 ? (
+                stats.recentProjects.map((project) => (
+                  <div key={project.id} className="py-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{project.name}</p>
+                        <p className="text-sm text-gray-500">{project.client}</p>
+                      </div>
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        project.status === 'completed'
+                          ? 'bg-green-100 text-green-800'
+                          : project.status === 'in-progress'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {project.status}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="py-3 text-center text-gray-500">
+                  No projects found
+                </div>
+              )}
+            </div>
           </div>
-        )}
-
-        {/* Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {loading ? (
-            // Loading skeletons
-            Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="bg-gray-900/50 rounded-xl p-4 animate-pulse">
-                <div className="h-48 bg-gray-800 rounded-lg mb-4" />
-                <div className="h-6 bg-gray-800 rounded w-3/4 mb-2" />
-                <div className="h-4 bg-gray-800 rounded w-1/2" />
-              </div>
-            ))
-          ) : (
-            posts.map(post => (
-              <BlogPostCard
-                key={post.id}
-                post={post}
-                onEdit={setEditingPost}
-                onDelete={handleDeletePost}
-                onPreview={handlePreviewPost}
-              />
-            ))
-          )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

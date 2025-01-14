@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { Contact } from '@/lib/models/contact';
+import { Contact } from '@/models/contact';
 import { sendEmail } from '@/lib/email';
 import connectDB from '@/lib/mongodb';
 import { ipRateLimit, deviceRateLimit, globalRateLimit } from '@/lib/redis';
@@ -8,8 +8,9 @@ import { headers } from 'next/headers';
 
 export async function POST(req: Request) {
   try {
-    const ip = headers().get('x-forwarded-for') || 'unknown';
-    const userAgent = headers().get('user-agent') || 'unknown';
+    const headersList = headers();
+    const ip = headersList.get('x-forwarded-for') || 'unknown';
+    const userAgent = headersList.get('user-agent') || 'unknown';
     
     // Check global rate limit
     const globalLimit = await globalRateLimit.limit(`global_${ip}`);
@@ -83,6 +84,8 @@ export async function POST(req: Request) {
       name,
       email,
       message,
+      ip,
+      userAgent,
       status: 'unread',
       timestamp: new Date()
     });
@@ -102,7 +105,9 @@ export async function POST(req: Request) {
       true,
       {
         email,
-        message
+        message,
+        ip,
+        userAgent
       }
     );
 

@@ -1,9 +1,6 @@
-'use client';
-
+import { siteConfig } from '@/config/site.config';
 import { motion } from 'framer-motion';
-import { HTMLMotionProps } from 'framer-motion';
 
-// Define the styled motion components with proper typing
 const StyledMotionDiv = motion.div as any;
 const StyledMotionSpan = motion.span as any;
 
@@ -29,8 +26,8 @@ export default function Logo() {
           transition={{ duration: 0.3 }}
         />
         
-        {/* Abstract 'W' shape */}
-        <StyledMotionDiv
+        {/* Abstract 'A' shape */}
+        {/* <StyledMotionDiv
           className="absolute inset-0 flex items-center justify-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -41,13 +38,30 @@ export default function Logo() {
             className="w-6 h-6 text-white"
             fill="currentColor"
           >
-            <path d="M2 6L6 20L12 6L18 20L22 6" 
-                  strokeWidth="2.5"
-                  className="stroke-white fill-none"
-                  style={{ strokeLinecap: 'round', strokeLinejoin: 'round' }}
+            <path 
+              d="M12 3L4 21H20L12 3ZM12 7L17 19H7L12 7Z" 
+              className="stroke-white fill-white"
+              strokeWidth="1"
             />
           </svg>
+        </StyledMotionDiv> */}
+
+        {/* App Logo Option */}
+        {/* Uncomment this section to use the app logo instead of the A shape */}
+        
+        <StyledMotionDiv
+          className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          <img 
+            src="/icons/apple-icon.png"
+            alt={siteConfig.name}
+            className="w-full h-full object-cover"
+          />
         </StyledMotionDiv>
+       
 
         {/* Animated overlay elements */}
         <StyledMotionDiv
@@ -84,7 +98,7 @@ export default function Logo() {
           whileHover={{ scale: 1.03 }}
           transition={{ duration: 0.2 }}
         >
-          WebGeniusCraft
+          {siteConfig.name}
         </StyledMotionSpan>
         <StyledMotionSpan
           className="text-xs text-gray-600 dark:text-gray-400 font-medium"

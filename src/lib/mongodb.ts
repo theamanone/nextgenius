@@ -1,45 +1,61 @@
 import mongoose from 'mongoose';
 
-interface GlobalMongoose {
-  conn: typeof mongoose | null;
-  promise: Promise<typeof mongoose> | null;
-}
-
-declare global {
-  var mongoose: GlobalMongoose;
-}
-
-if (!global.mongoose) {
-  global.mongoose = { conn: null, promise: null };
-}
-
-const MONGODB_URI = process.env.MONGODB_URI!;
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   throw new Error('Please define the MONGODB_URI environment variable inside .env');
 }
 
-async function connectDB(): Promise<typeof mongoose> {
-  if (global.mongoose.conn) {
-    return global.mongoose.conn;
+// define global types 
+declare global {
+  var mongoose: any;
+}
+
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function connectDB() {
+  if (cached.conn) {
+    return cached.conn;
   }
 
-  if (!global.mongoose.promise) {
+  if (!cached.promise) {
     const opts = {
-      bufferCommands: false,
+      bufferCommands: true,
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 10000, // Increase timeout to 10 seconds
+      socketTimeoutMS: 45000, // Increase socket timeout
+      family: 4, // Use IPv4, skip trying IPv6
+      retryWrites: true,
+      retryReads: true,
     };
 
-    global.mongoose.promise = mongoose.connect(MONGODB_URI, opts);
+    mongoose.set('strictQuery', true);
+
+    try {
+      cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+        console.log('MongoDB connected successfully');
+        return mongoose;
+      });
+    } catch (error) {
+      cached.promise = null;
+      console.error('MongoDB connection error:', error);
+      throw error;
+    }
   }
 
   try {
-    const conn = await global.mongoose.promise;
-    global.mongoose.conn = conn;
-    return conn;
-  } catch (e) {
-    global.mongoose.promise = null;
-    throw e;
+    cached.conn = await cached.promise;
+  } catch (error) {
+    cached.promise = null;
+    console.error('MongoDB connection error:', error);
+    throw error;
   }
+
+  return cached.conn;
 }
 
 export default connectDB;

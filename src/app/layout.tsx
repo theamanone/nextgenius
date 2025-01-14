@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import Providers from '@/components/providers/Providers';
+import Footer from '@/components/Footer';
+import './globals.css';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -17,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'WebGeniusCraft - Creative Web Development Solutions',
     description: 'Professional web development services offering custom solutions, modern designs, and innovative technologies.',
-    images: ['/og-image.jpg'], // Add your OG image path
+    images: ['/og-image.jpg'],
     type: 'website',
   },
   twitter: {
@@ -30,28 +29,21 @@ export const metadata: Metadata = {
     follow: true,
   },
   authors: [{ name: 'WebGeniusCraft Team' }],
-  viewport: 'width=device-width, initial-scale=1',
-  themeColor: '#4F46E5', // Indigo color to match the logo
 };
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} scroll-smooth`}>
-      <head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
-      </head>
-      <body className={`${inter.variable} font-sans bg-black text-white min-h-screen`}>
+    <html lang="en" className={inter.variable}>
+      <body className="min-h-screen bg-background font-sans antialiased">
         <Providers>
-          <Header />
-          <div className="flex flex-col min-h-screen">
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <main className="relative flex min-h-screen flex-col">
+            {children}
+          </main>
+          <Footer />
         </Providers>
       </body>
     </html>

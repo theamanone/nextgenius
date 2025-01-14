@@ -4,43 +4,50 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { FaCode, FaPaintBrush, FaMobileAlt, FaSearch, FaShoppingCart, FaServer } from 'react-icons/fa';
 import { Service } from '@/types';
+import { siteConfig } from '@/config/site.config';
 
 const services: Service[] = [
   {
     icon: FaCode,
     title: 'Web Development',
-    description: 'Custom web applications built with modern technologies and best practices.',
-    color: 'from-blue-500 to-cyan-500'
+    description: `Custom web applications built with modern technologies and best practices by ${siteConfig.name}.`,
+    color: 'from-blue-500 to-cyan-500',
+    available: true
   },
   {
     icon: FaPaintBrush,
     title: 'Web Design',
-    description: 'Beautiful, responsive designs that provide the best user experience.',
-    color: 'from-purple-500 to-pink-500'
+    description: `Beautiful, responsive designs that provide the best user experience from ${siteConfig.name}.`,
+    color: 'from-purple-500 to-pink-500',
+    available: true
   },
   {
     icon: FaMobileAlt,
-    title: 'Mobile-First Design',
-    description: 'Websites optimized for all devices, ensuring a seamless experience.',
-    color: 'from-green-500 to-emerald-500'
+    title: 'Mobile Development',
+    description: `Native and cross-platform mobile applications for iOS and Android by ${siteConfig.name}.`,
+    color: 'from-green-500 to-emerald-500',
+    available: false
   },
   {
     icon: FaSearch,
     title: 'SEO Optimization',
-    description: 'Improve your website\'s visibility and ranking in search engines.',
-    color: 'from-orange-500 to-yellow-500'
+    description: `Improve your website's visibility and ranking in search engines with ${siteConfig.name}.`,
+    color: 'from-orange-500 to-yellow-500',
+    available: true
   },
   {
     icon: FaShoppingCart,
     title: 'E-Commerce Solutions',
-    description: 'Custom online stores with secure payment integration.',
-    color: 'from-red-500 to-rose-500'
+    description: `Custom online stores with secure payment integration by ${siteConfig.name}.`,
+    color: 'from-red-500 to-rose-500',
+    available: true
   },
   {
     icon: FaServer,
     title: 'Web Hosting',
-    description: 'Reliable hosting solutions with excellent uptime and support.',
-    color: 'from-indigo-500 to-violet-500'
+    description: `Reliable hosting solutions with excellent uptime and support from ${siteConfig.name}.`,
+    color: 'from-indigo-500 to-violet-500',
+    available: true
   }
 ];
 
@@ -61,6 +68,13 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="relative group"
     >
+      {!service.available && (
+        <div className="absolute -right-2 -top-2 z-20">
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm px-4 py-1 rounded-full shadow-lg">
+            Coming Soon
+          </div>
+        </div>
+      )}
       <motion.div 
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"
         style={{ 
@@ -68,8 +82,8 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
         }} 
       />
       <motion.div 
-        className="relative bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-xl 
-                   hover:border-white/20 transition-all duration-300"
+        className={`relative bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-xl 
+                   hover:border-white/20 transition-all duration-300 ${!service.available ? 'opacity-75' : ''}`}
         whileHover={{ y: -5 }}
       >
         <div className="relative z-10">

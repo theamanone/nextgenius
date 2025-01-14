@@ -1,148 +1,154 @@
 'use client';
 
 import Link from 'next/link';
-import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { siteConfig } from '@/config/site.config';
+import StarfieldBackground from './StarfieldBackground';
+import { IconBase } from 'react-icons';
 
 export default function Footer() {
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const services = [
+    { name: 'Web Design', href: '/services/web-design' },
+    { name: 'Web Development', href: '/services/web-development' },
+    { name: 'Digital Marketing', href: '/services/digital-marketing' },
+    { name: 'UI/UX Design', href: '/services/ui-ux-design' },
+  ];
+
   return (
-    <footer className="bg-gray-900 text-white pt-12 pb-6">
-      {/* Top Row */}
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          {/* Location */}
-          <div className="flex items-center space-x-4">
-            <FaMapMarkerAlt className="text-3xl text-blue-500" />
+    <footer className="w-full text-gray-300 relative">
+      <StarfieldBackground className="absolute inset-0 z-0" />
+      <div className="relative z-10 w-full">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Location */}
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500/5">
+                <FaMapMarkerAlt className="text-2xl text-blue-400" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold mb-1">Find Us</h2>
+                <p className="text-gray-400">Hisar, Haryana India</p>
+              </div>
+            </div>
+
+            {/* Phone */}
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500/10">
+                <FaPhone className="text-2xl text-blue-400" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold mb-2">Call Us</h2>
+                <a href="tel:7497052603" className="text-gray-400 hover:text-blue-400 transition-colors">
+                  {siteConfig.author.phone}
+                </a>
+              </div>
+            </div>
+
+            {/* Email */}
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500/10">
+                <FaEnvelope className="text-2xl text-blue-400" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold mb-2">Email Us</h2>
+                <a href={`mailto:${siteConfig.author.email}`} className="text-gray-400 hover:text-blue-400 transition-colors">
+                  {siteConfig.author.email}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Footer Content */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 py-8 border-t border-gray-800/50">
+            {/* About */}
+            <div className="md:col-span-2">
+              <h3 className="text-xl font-semibold mb-4">{siteConfig.name}</h3>
+              <p className="text-gray-400 mb-4">
+                {siteConfig.description}
+              </p>
+              <div className="flex space-x-4">
+              {Object.entries(siteConfig.links).map(([platform, url]) => {
+                  if (['twitter', 'github', 'linkedin'].includes(platform)) {
+                    const Icon = {
+                      twitter: FaTwitter,
+                      github: FaFacebook,
+                      linkedin: FaLinkedin
+                    }[platform];
+                    return (
+                      <a
+                        key={platform}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800/50 hover:bg-blue-500/20 text-gray-400 hover:text-blue-400 transition-all duration-300"
+                      >
+                        {Icon && <Icon className="text-xl" />}
+                      </a>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            </div>
+
+            {/* Quick Links */}
             <div>
-              <h2 className="text-xl font-semibold mb-2">Find Us</h2>
-              <p>Hisar Haryana India</p>
+              <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="/about" className="text-gray-400 hover:text-blue-400 transition-colors">
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/projects" className="text-gray-400 hover:text-blue-400 transition-colors">
+                    Projects
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/contact" className="text-gray-400 hover:text-blue-400 transition-colors">
+                    Contact
+                  </Link>
+                </li>
+              </ul>
             </div>
-          </div>
 
-          {/* Phone */}
-          <div className="flex items-center space-x-4">
-            <FaPhone className="text-3xl text-blue-500" />
+            {/* Services */}
             <div>
-              <h2 className="text-xl font-semibold mb-2">Call Us</h2>
-              <a href="tel:7497052603" className="hover:text-blue-400 transition-colors">
-                +91 (74970)52603
-              </a>
+              <h3 className="text-xl font-semibold mb-4">Services</h3>
+              <ul className="space-y-2">
+                {services.map((service) => (
+                  <li key={service.href}>
+                    <Link 
+                      href={service.href}
+                      className="text-gray-400 hover:text-blue-400 transition-colors"
+                    >
+                      {service.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
-          {/* Email */}
-          <div className="flex items-center space-x-4">
-            <FaEnvelope className="text-3xl text-blue-500" />
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Email Us</h2>
-              <a href="mailto:contact@webgeniuscraft.com" className="hover:text-blue-400 transition-colors">
-                contact@webgeniuscraft.com
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-8 border-t border-gray-800">
-          {/* About */}
-          <div>
-            <h3 className="text-xl font-semibold mb-4">About Us</h3>
-            <p className="text-gray-400 mb-4">
-              WebGeniusCraft is a leading web development company specializing in creating
-              innovative and responsive web solutions for businesses worldwide.
-            </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-blue-500 transition-colors">
-                <FaFacebook size={24} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-blue-500 transition-colors">
-                <FaTwitter size={24} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-blue-500 transition-colors">
-                <FaInstagram size={24} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-blue-500 transition-colors">
-                <FaLinkedin size={24} />
-              </a>
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/" className="text-gray-400 hover:text-blue-400 transition-colors">
-                  Home
+          {/* Bottom Bar */}
+          <div className="border-t border-gray-800 mt-8">
+            <div className="container mx-auto px-4 py-6">
+              <p className="text-gray-400 text-sm mb-4 md:mb-0">
+                {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+              </p>
+              <div className="flex space-x-4 text-sm">
+                <Link href="/privacy" className="text-gray-400 hover:text-blue-400 transition-colors">
+                  Privacy Policy
                 </Link>
-              </li>
-              <li>
-                <Link href="/about" className="text-gray-400 hover:text-blue-400 transition-colors">
-                  About
+                <Link href="/terms" className="text-gray-400 hover:text-blue-400 transition-colors">
+                  Terms of Service
                 </Link>
-              </li>
-              <li>
-                <Link href="/services" className="text-gray-400 hover:text-blue-400 transition-colors">
-                  Services
-                </Link>
-              </li>
-              <li>
-                <Link href="/projects" className="text-gray-400 hover:text-blue-400 transition-colors">
-                  Projects
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-gray-400 hover:text-blue-400 transition-colors">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Services */}
-          <div>
-            <h3 className="text-xl font-semibold mb-4">Our Services</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/services#web-development" className="text-gray-400 hover:text-blue-400 transition-colors">
-                  Web Development
-                </Link>
-              </li>
-              <li>
-                <Link href="/services#web-design" className="text-gray-400 hover:text-blue-400 transition-colors">
-                  Web Design
-                </Link>
-              </li>
-              <li>
-                <Link href="/services#graphic-design" className="text-gray-400 hover:text-blue-400 transition-colors">
-                  Graphic Design
-                </Link>
-              </li>
-              <li>
-                <Link href="/services#digital-marketing" className="text-gray-400 hover:text-blue-400 transition-colors">
-                  Digital Marketing
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Bottom Row */}
-        <div className="border-t border-gray-800 pt-6">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm mb-4 md:mb-0">
-              © {new Date().getFullYear()} WebGeniusCraft. All rights reserved.
-            </p>
-            <div className="flex space-x-4 text-sm">
-              <Link href="/terms" className="text-gray-400 hover:text-blue-400 transition-colors">
-                Terms & Conditions
-              </Link>
-              <Link href="/privacy-policy" className="text-gray-400 hover:text-blue-400 transition-colors">
-                Privacy Policy
-              </Link>
+              </div>
             </div>
           </div>
         </div>

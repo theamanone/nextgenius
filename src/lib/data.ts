@@ -1,5 +1,5 @@
 // Constants
-export const FALLBACK_IMAGE = '/assets/images/placeholder.jpg';
+export const FALLBACK_IMAGE = '/assets/images/OneErrorImage.png';
 
 // Types
 export interface BlogPost {

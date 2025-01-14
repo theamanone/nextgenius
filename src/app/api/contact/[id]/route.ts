@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { Contact } from '@/lib/models/contact';
-import { connectDB } from '@/lib/mongodb';
+import { Contact } from '@/models/contact';
+import connectDB  from '@/lib/mongodb';
 
 // Update message status
 export async function PATCH(

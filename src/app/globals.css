@@ -2,142 +2,95 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
 
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimize performance for animations */
+* {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+/* Optimize mobile touch actions */
+@media (max-width: 768px) {
+  * {
+    touch-action: manipulation;
+  }
+}
+
+/* Reduce motion if user prefers */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom text selection */
+::selection {
+  background: rgba(79, 70, 229, 0.3);
+  color: #fff;
+  text-shadow: 0 0 8px rgba(79, 70, 229, 0.6);
+}
+
+::-moz-selection {
+  background: rgba(79, 70, 229, 0.3);
+  color: #fff;
+  text-shadow: 0 0 8px rgba(79, 70, 229, 0.6);
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.8);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+@layer base {
   body {
     @apply text-white bg-black min-h-screen overflow-x-hidden;
-  }
-
-  /* Custom Scrollbar */
-  ::-webkit-scrollbar {
-    @apply w-2;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-black/30;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-blue-600 rounded;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-blue-700;
   }
 }
 
 @layer components {
   .container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-
-  .btn {
-    @apply px-6 py-2 rounded-lg transition-all duration-300;
-  }
-
-  .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white;
-  }
-
-  .btn-secondary {
-    @apply bg-gray-800 hover:bg-gray-700 text-white;
-  }
-
-  .card {
-    @apply bg-gray-900/50 rounded-lg p-6 backdrop-blur-sm border border-gray-800/50;
-  }
-
-  .glass {
-    @apply bg-white/5 backdrop-blur-lg border border-white/10;
-  }
-}
-
-@layer utilities {
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600;
-  }
-
-  .animate-fade-in {
-    animation: fadeIn 1s ease-out forwards;
-  }
-
-  /* Animation Utilities */
-  @keyframes scroll {
-    0% { transform: translateY(0); opacity: 0; }
-    30% { opacity: 1; }
-    60% { opacity: 1; }
-    100% { transform: translateY(20px); opacity: 0; }
-  }
-
-  .animate-scroll {
-    animation: scroll 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-  }
-
-  .typewriter-text {
-    @apply bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent;
-  }
-
-  .typewriter-cursor {
-    @apply text-blue-400;
-  }
-
-  /* Gradient Animations */
-  @keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  .animate-gradient {
-    background-size: 200% 200%;
-    animation: gradient 15s ease infinite;
-  }
-
-  /* Hover Effects */
-  .hover-lift {
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .hover-lift:hover {
-    transform: translateY(-2px);
-  }
-
-  /* Glass Effect */
-  .glass-dark {
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes blob {
-  0% {
-    transform: translate(0px, 0px) scale(1);
-  }
-  33% {
-    transform: translate(30px, -50px) scale(1.1);
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-  100% {
-    transform: translate(0px, 0px) scale(1);
   }
 }
