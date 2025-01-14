@@ -21,9 +21,9 @@ const fadeIn = {
 
 export default function Contact() {
   const [formData, setFormData] = useState({
-    name: 'aman',
-    email: 'amankirmara143@gmail.com',
-    message: 'hello world ',
+    name: '',
+    email: '',
+    message: '',
   });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);

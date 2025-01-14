@@ -1,16 +1,17 @@
-import { Metadata } from 'next';
-import { siteConfig } from '@/config/site.config';
+'use client';
 
-export const metadata: Metadata = {
-  title: `Web Design Services - ${siteConfig.name}`,
-  description: 'Professional web design services for modern businesses.',
-};
+import { MotionDiv } from '@/components/motion/MotionDiv';
 
-export default function WebDesign() {
+export default function WebDesignContent() {
   return (
     <div className="min-h-screen pt-24">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto animate-fadeIn">
+        <MotionDiv
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-4xl mx-auto"
+        >
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Web Design Services</h1>
           <p className="text-gray-400 text-lg mb-8">
             Creating beautiful, functional, and user-friendly websites that make an impact.
@@ -53,7 +54,7 @@ export default function WebDesign() {
               </div>
             </div>
           </div>
-        </div>
+        </MotionDiv>
       </div>
     </div>
   );

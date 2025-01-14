@@ -1,17 +1,23 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
-import * as random from 'maath/random';
+import * as random from 'maath/random/dist/maath-random.cjs';
 
 function StarField() {
   const ref = useRef<any>();
-  const sphere = random.inSphere(new Float32Array(5000), { radius: 1.5 });
+  const [sphere] = useState(() => {
+    const positions = new Float32Array(5000 * 3);
+    random.inSphere(positions, { radius: 1.5 });
+    return positions;
+  });
 
   useFrame((state, delta) => {
-    ref.current.rotation.x -= delta / 10;
-    ref.current.rotation.y -= delta / 15;
+    if (ref.current) {
+      ref.current.rotation.x -= delta / 10;
+      ref.current.rotation.y -= delta / 15;
+    }
   });
 
   return (

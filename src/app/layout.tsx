@@ -3,33 +3,14 @@ import { Inter } from 'next/font/google';
 import Providers from '@/components/providers/Providers';
 import Footer from '@/components/Footer';
 import './globals.css';
+import { defaultMetadata } from './metadata';
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
 });
 
-export const metadata: Metadata = {
-  title: 'WebGeniusCraft - Creative Web Development Solutions',
-  description: 'Professional web development services offering custom solutions, modern designs, and innovative technologies.',
-  keywords: 'web development, web design, frontend development, backend development, full-stack development',
-  openGraph: {
-    title: 'WebGeniusCraft - Creative Web Development Solutions',
-    description: 'Professional web development services offering custom solutions, modern designs, and innovative technologies.',
-    images: ['/og-image.jpg'],
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'WebGeniusCraft - Creative Web Development Solutions',
-    description: 'Professional web development services offering custom solutions, modern designs, and innovative technologies.',
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  authors: [{ name: 'WebGeniusCraft Team' }],
-};
+export const metadata: Metadata = defaultMetadata;
 
 export default function RootLayout({
   children,

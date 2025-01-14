@@ -5,7 +5,9 @@ import connectDB from '@/lib/mongodb';
 import Product from '@/models/Product';
 import { Project } from '@/models/Project';
 import { authOptions } from '../../auth/[...nextauth]/route';
- 
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET() {
   try {
@@ -42,7 +44,7 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching admin stats:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch admin stats' },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

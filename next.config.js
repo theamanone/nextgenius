@@ -9,7 +9,6 @@ const nextConfig = {
     ],
   },
   webpack: (config) => {
-    // Required for Three.js
     config.externals = [...(config.externals || []), { canvas: 'canvas' }];
     return config;
   },

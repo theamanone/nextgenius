@@ -1,16 +1,23 @@
-import { siteConfig } from '@/config/site.config';
-import { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-  title: `Terms of Service - ${siteConfig.name}`,
-  description: 'Terms of service and usage conditions for our web services.',
-};
+import { MotionMain } from '@/components/motion/MotionMain';
+import { MotionDiv } from '@/components/motion/MotionDiv';
 
-export default function Terms() {
+export default function TermsContent() {
   return (
-    <main className="min-h-screen bg-black text-white pt-24 pb-16 px-4 animate-fadeIn">
+    <MotionMain 
+      className="min-h-screen bg-black text-white pt-24 pb-16 px-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="container mx-auto max-w-4xl">
-        <div className="space-y-8">
+        <MotionDiv
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="space-y-8"
+        >
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-8">
             Terms of Service
           </h1>
@@ -48,8 +55,8 @@ export default function Terms() {
               <p>Phone: +91 (74970)52603</p>
             </div>
           </section>
-        </div>
+        </MotionDiv>
       </div>
-    </main>
+    </MotionMain>
   );
 }
